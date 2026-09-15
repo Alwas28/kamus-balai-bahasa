@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+@layer components {
+    .font-display {
+        font-family: 'Fredoka', sans-serif;
+    }
+
+    .paper-texture {
+        background-image: radial-gradient(rgba(19, 34, 36, 0.05) 1px, transparent 1px);
+        background-size: 16px 16px;
+    }
+}
+
+::selection {
+    background: #f0b23f;
+    color: #132224;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kamus Digital Indonesia–Tolaki untuk Pelajar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          teal: { 50:'#eef7f6', 100:'#d6ece9', 200:'#aed9d3', 300:'#7cbfb6', 400:'#469b90', 500:'#2c7e74', 600:'#0f6e7a', 700:'#0b5560', 800:'#0a4249', 900:'#0a343a', 950:'#062024' },
+          sand: { 50:'#fdfbf5', 100:'#f7f2e4', 200:'#efe6cc', 300:'#e3d3a5', 400:'#d3ba78', 500:'#c4a256' },
+          gold: { 400:'#f0b23f', 500:'#e8a33d', 600:'#c9852a' },
+          konawe: { 500:'#c1432e', 600:'#a3341f' },
+          mekongga: { 500:'#3f7d52', 600:'#2f6140' },
+          ink: '#132224',
+        },
+        fontFamily: {
+          display: ['Fredoka','sans-serif'],
+          body: ['"Plus Jakarta Sans"','sans-serif'],
+        },
+        boxShadow: {
+          pin: '0 10px 20px -8px rgba(19,34,36,0.35)',
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .font-display { font-family: 'Fredoka', sans-serif; }
+  .paper-texture {
+    background-image: radial-gradient(rgba(19,34,36,0.05) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+  .pin::before {
+    content: '';
+    position: absolute;
+    top: -8px; left: 50%;
+    transform: translateX(-50%);
+    width: 16px; height: 16px;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 35% 30%, #ff8b7a, #c1432e 65%);
+    box-shadow: 0 3px 4px rgba(0,0,0,0.35);
+  }
+  .tape::after {
+    content: '';
+    position: absolute;
+    top: -10px; right: 10%;
+    width: 46px; height: 20px;
+    background: rgba(240,178,63,0.55);
+    border: 1px solid rgba(201,133,42,0.4);
+    transform: rotate(-6deg);
+  }
+  details > summary { list-style: none; }
+  details > summary::-webkit-details-marker { display:none; }
+  details[open] .chev { transform: rotate(180deg); }
+  .fade-up { animation: fadeUp .6s ease both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(14px);} to {opacity:1; transform:none;} }
+  ::selection { background: #f0b23f; color:#132224; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .fade-up { animation: none; }
+  }
+</style>
+</head>
+<body class="bg-sand-50 text-ink">
+
+<!-- ===================== HEADER ===================== -->
+<header class="sticky top-0 z-50 bg-sand-50/90 backdrop-blur border-b border-sand-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      <a href="#beranda" class="flex items-center gap-3 shrink-0">
+        <img src="./assets/logo-kemendikdasmen.png" alt="Logo Kemendikdasmen - Balai Bahasa Provinsi Sulawesi Tenggara" class="h-9 sm:h-10 w-auto" />
+        <div class="hidden sm:block h-9 w-px bg-sand-300"></div>
+        <div class="hidden sm:block leading-tight">
+          <p class="font-display font-semibold text-teal-800 text-sm">Kamus Digital</p>
+          <p class="text-[11px] text-teal-600">Indonesia–Tolaki untuk Pelajar</p>
+        </div>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-1 font-medium text-sm text-teal-800">
+        <a href="#beranda" class="px-4 py-2 rounded-full hover:bg-teal-50 hover:text-teal-700 transition">Beranda</a>
+        <a href="#cari" class="px-4 py-2 rounded-full hover:bg-teal-50 hover:text-teal-700 transition">Cari</a>
+
+        <div class="relative group">
+          <button class="flex items-center gap-1 px-4 py-2 rounded-full hover:bg-teal-50 hover:text-teal-700 transition">
+            Seputar Laman
+            <svg class="w-3.5 h-3.5 mt-px transition group-hover:rotate-180" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="absolute left-1/2 -translate-x-1/2 pt-3 w-56 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition duration-150">
+            <div class="bg-white rounded-2xl shadow-pin ring-1 ring-sand-200 p-2">
+              <a href="#tentang" class="block px-4 py-2.5 rounded-xl text-sm hover:bg-sand-100 text-ink">Tentang Kami</a>
+              <a href="#tim" class="block px-4 py-2.5 rounded-xl text-sm hover:bg-sand-100 text-ink">Tim Penyusun</a>
+              <a href="#statistik" class="block px-4 py-2.5 rounded-xl text-sm hover:bg-sand-100 text-ink">Statistik</a>
+              <a href="#bantuan" class="block px-4 py-2.5 rounded-xl text-sm hover:bg-sand-100 text-ink">Bantuan (SSD)</a>
+            </div>
+          </div>
+        </div>
+
+        <a href="#kontak" class="px-4 py-2 rounded-full hover:bg-teal-50 hover:text-teal-700 transition">Kontak</a>
+      </nav>
+
+      <a href="#cari" class="hidden md:inline-flex items-center gap-2 bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold px-5 py-2.5 rounded-full transition shadow-sm">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Mulai Cari
+      </a>
+
+      <!-- Mobile toggle -->
+      <button id="menuBtn" class="md:hidden p-2 rounded-lg text-teal-800" aria-label="Buka menu">
+        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <div id="mobileMenu" class="hidden md:hidden border-t border-sand-200 bg-sand-50">
+    <div class="px-4 py-3 flex flex-col gap-1 font-medium text-teal-800">
+      <a href="#beranda" class="px-3 py-2.5 rounded-lg hover:bg-teal-50">Beranda</a>
+      <a href="#cari" class="px-3 py-2.5 rounded-lg hover:bg-teal-50">Cari</a>
+      <p class="px-3 pt-3 pb-1 text-xs uppercase tracking-wide text-teal-500">Seputar Laman</p>
+      <a href="#tentang" class="px-3 py-2.5 rounded-lg hover:bg-teal-50 pl-6">Tentang Kami</a>
+      <a href="#tim" class="px-3 py-2.5 rounded-lg hover:bg-teal-50 pl-6">Tim Penyusun</a>
+      <a href="#statistik" class="px-3 py-2.5 rounded-lg hover:bg-teal-50 pl-6">Statistik</a>
+      <a href="#bantuan" class="px-3 py-2.5 rounded-lg hover:bg-teal-50 pl-6">Bantuan (SSD)</a>
+      <a href="#kontak" class="px-3 py-2.5 rounded-lg hover:bg-teal-50 mt-2">Kontak</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== HERO / BERANDA ===================== -->
+<section id="beranda" class="relative overflow-hidden bg-teal-800 text-sand-50">
+  <div class="absolute inset-0 opacity-10 paper-texture"></div>
+  <div class="absolute -top-24 -right-24 w-96 h-96 bg-gold-500/20 rounded-full blur-3xl"></div>
+  <div class="absolute -bottom-32 -left-16 w-80 h-80 bg-mekongga-500/20 rounded-full blur-3xl"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-20 sm:pt-20 sm:pb-28">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="fade-up">
+        <span class="inline-flex items-center gap-2 bg-white/10 text-gold-400 text-xs font-semibold tracking-wide uppercase px-3 py-1.5 rounded-full ring-1 ring-white/15">
+          Balai Bahasa Provinsi Sulawesi Tenggara
+        </span>
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] font-semibold mt-5">
+          Kamus Digital<br/>
+          <span class="text-gold-400">Indonesia&nbsp;–&nbsp;Tolaki</span><br/>
+          untuk Pelajar
+        </h1>
+        <p class="mt-5 text-teal-100/90 text-base sm:text-lg max-w-md">
+          Cari kosakata, dengarkan pelafalannya, dan kenali dua dialek utama bahasa Tolaki: <span class="text-konawe-500 bg-white/90 px-1.5 py-0.5 rounded font-semibold">Konawe</span> dan <span class="text-mekongga-500 bg-white/90 px-1.5 py-0.5 rounded font-semibold">Mekongga</span>.
+        </p>
+
+        <!-- legenda warna -->
+        <div class="mt-6 flex flex-wrap gap-2.5 text-xs font-semibold">
+          <span class="flex items-center gap-1.5 bg-white/95 text-ink px-3 py-1.5 rounded-full"><span class="w-2.5 h-2.5 rounded-full bg-ink"></span>Bahasa Indonesia</span>
+          <span class="flex items-center gap-1.5 bg-white/95 text-konawe-600 px-3 py-1.5 rounded-full"><span class="w-2.5 h-2.5 rounded-full bg-konawe-500"></span>Dialek Konawe</span>
+          <span class="flex items-center gap-1.5 bg-white/95 text-mekongga-600 px-3 py-1.5 rounded-full"><span class="w-2.5 h-2.5 rounded-full bg-mekongga-500"></span>Dialek Mekongga</span>
+        </div>
+      </div>
+
+      <!-- Kartu pencarian -->
+      <div id="cari" class="fade-up scroll-mt-28">
+        <div class="bg-sand-50 text-ink rounded-3xl shadow-2xl p-5 sm:p-7">
+          <p class="font-display font-semibold text-lg text-teal-800">Cari kosakata</p>
+          <p class="text-sm text-ink/60 mt-1">Ketik kata dalam Bahasa Indonesia, atau gunakan suara.</p>
+
+          <div class="mt-4 flex items-center gap-2 bg-white border-2 border-sand-200 focus-within:border-teal-500 rounded-2xl px-4 py-3 transition">
+            <svg class="w-5 h-5 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <input id="searchInput" type="text" placeholder="mis. lima, seratus, sembilan…"
+              class="flex-1 bg-transparent outline-none text-base placeholder:text-ink/35" />
+            <button id="micBtn" title="Cari dengan suara" aria-label="Cari dengan suara"
+              class="shrink-0 w-9 h-9 flex items-center justify-center rounded-full bg-teal-50 text-teal-700 hover:bg-teal-100 transition">
+              <svg class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V6a3 3 0 10-6 0v6a3 3 0 003 3z" stroke="currentColor" stroke-width="2"/><path d="M19 11a7 7 0 01-14 0M12 18v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+          <p id="micStatus" class="text-xs text-teal-600 mt-2 h-4"></p>
+
+          <div class="flex items-center justify-between mt-5">
+            <p class="text-xs uppercase tracking-wide text-ink/40 font-semibold">Contoh data · Angka</p>
+            <p id="resultCount" class="text-xs text-ink/40 font-medium"></p>
+          </div>
+
+          <div id="wordGrid" class="mt-3 space-y-2.5 max-h-[26rem] overflow-y-auto pr-1 -mr-1"></div>
+          <div id="emptyState" class="hidden text-center py-10">
+            <svg class="w-9 h-9 mx-auto text-ink/20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <p class="text-sm text-ink/50 mt-2">Kata tidak ditemukan pada contoh data ini.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TENTANG KAMI ===================== -->
+<section id="tentang" class="scroll-mt-24 py-20 sm:py-28 bg-sand-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-5 gap-12">
+    <div class="lg:col-span-2">
+      <span class="text-xs font-bold uppercase tracking-widest text-konawe-500">01 · Tentang Kami</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold text-teal-900 mt-3">Merawat bahasa Tolaki lewat layar pelajar</h2>
+      <p class="mt-4 text-ink/70 leading-relaxed">
+        Kamus Digital Indonesia–Tolaki untuk Pelajar disusun agar generasi muda Sulawesi Tenggara mengenal kembali kosakata
+        daerahnya sendiri — lengkap dengan pelafalan suara dan padanan dua dialek utama.
+      </p>
+    </div>
+    <div class="lg:col-span-3 grid sm:grid-cols-2 gap-5">
+      <div class="relative bg-white rounded-2xl p-6 ring-1 ring-sand-200">
+        <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M12 20l9-5-9-5-9 5 9 5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 12v6M21 12v6" stroke="currentColor" stroke-width="2"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-lg text-ink">Untuk pelajar</h3>
+        <p class="text-sm text-ink/60 mt-1.5">Tampilan sederhana, ramah untuk siswa SD–SMA yang baru mengenal bahasa daerah.</p>
+      </div>
+      <div class="relative bg-white rounded-2xl p-6 ring-1 ring-sand-200">
+        <div class="w-10 h-10 rounded-xl bg-konawe-500/10 text-konawe-600 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 003-3V6a3 3 0 10-6 0v6a3 3 0 003 3z" stroke="currentColor" stroke-width="2"/><path d="M19 11a7 7 0 01-14 0M12 18v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-lg text-ink">Ada suara</h3>
+        <p class="text-sm text-ink/60 mt-1.5">Setiap kata bisa didengarkan pelafalannya lewat tombol pengucapan.</p>
+      </div>
+      <div class="relative bg-white rounded-2xl p-6 ring-1 ring-sand-200">
+        <div class="w-10 h-10 rounded-xl bg-mekongga-500/10 text-mekongga-600 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h10M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-lg text-ink">Dua dialek</h3>
+        <p class="text-sm text-ink/60 mt-1.5">Padanan kata ditampilkan untuk dialek Konawe dan Mekongga sekaligus.</p>
+      </div>
+      <div class="relative bg-white rounded-2xl p-6 ring-1 ring-sand-200">
+        <div class="w-10 h-10 rounded-xl bg-gold-500/15 text-gold-600 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5.4L20 9l-4.2 3.8L17 19l-5-3.2L7 19l1.2-6.2L4 9l5.6-.6L12 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-lg text-ink">Terbuka & gratis</h3>
+        <p class="text-sm text-ink/60 mt-1.5">Dikembangkan Balai Bahasa Provinsi Sulawesi Tenggara bersama mitra kampus.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TIM PENYUSUN ===================== -->
+<section id="tim" class="scroll-mt-24 py-20 sm:py-28 bg-teal-900 text-sand-50 relative overflow-hidden">
+  <div class="absolute inset-0 opacity-[0.06] paper-texture"></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl">
+      <span class="text-xs font-bold uppercase tracking-widest text-gold-400">02 · Tim Penyusun</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-3">Kolaborasi BBST dan UMK</h2>
+      <p class="mt-4 text-teal-100/80">Susunan penanggung jawab kamus digital ini melibatkan unsur pimpinan Balai Bahasa Provinsi Sulawesi Tenggara (BBST) dan Universitas Muhammadiyah Kendari (UMK).</p>
+    </div>
+
+    <div class="mt-12 grid md:grid-cols-2 gap-5">
+      <div class="bg-white/5 ring-1 ring-white/10 rounded-2xl p-6">
+        <p class="text-xs font-bold uppercase tracking-wide text-gold-400">Penanggung Jawab</p>
+        <ul class="mt-4 space-y-4">
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 w-6 h-6 rounded-full bg-gold-500/20 text-gold-400 text-xs font-bold flex items-center justify-center shrink-0">1</span>
+            <div><p class="font-semibold">Penanggung Jawab I</p><p class="text-sm text-teal-100/70">Unsur pimpinan Balai Bahasa Provinsi Sulawesi Tenggara</p></div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 w-6 h-6 rounded-full bg-gold-500/20 text-gold-400 text-xs font-bold flex items-center justify-center shrink-0">2</span>
+            <div><p class="font-semibold">Penanggung Jawab II</p><p class="text-sm text-teal-100/70">Unsur pimpinan Universitas Muhammadiyah Kendari (UMK)</p></div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="bg-white/5 ring-1 ring-white/10 rounded-2xl p-6">
+        <p class="text-xs font-bold uppercase tracking-wide text-gold-400">Wakil Penanggung Jawab</p>
+        <ul class="mt-4 space-y-4">
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 w-2 h-2 rounded-full bg-mekongga-500 shrink-0 mt-2"></span>
+            <div><p class="font-semibold">Pejabat UMK</p><p class="text-sm text-teal-100/70">Perwakilan struktural dari Universitas Muhammadiyah Kendari</p></div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 w-2 h-2 rounded-full bg-mekongga-500 shrink-0 mt-2"></span>
+            <div><p class="font-semibold">Koordinator / Ketua Tim UMK</p><p class="text-sm text-teal-100/70">Mengoordinasikan tim penyusun dari pihak kampus</p></div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 w-2 h-2 rounded-full bg-mekongga-500 shrink-0 mt-2"></span>
+            <div><p class="font-semibold">Kasubbag Umum BBST</p><p class="text-sm text-teal-100/70">Mengoordinasikan dukungan umum dari Balai Bahasa</p></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STATISTIK ===================== -->
+<section id="statistik" class="scroll-mt-24 py-20 sm:py-28 bg-sand-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <span class="text-xs font-bold uppercase tracking-widest text-konawe-500">03 · Statistik</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold text-teal-900 mt-3">Perkembangan penggunaan kamus</h2>
+    <p class="mt-3 text-ink/60 max-w-xl">Data pengunjung dan jumlah entri kosakata diperbarui secara berkala oleh admin BBST dan UMK.</p>
+
+    <div class="mt-10 grid sm:grid-cols-3 gap-5">
+      <div class="bg-white rounded-2xl p-7 ring-1 ring-sand-200">
+        <p class="text-sm text-ink/50 font-medium">Pengunjung harian</p>
+        <p class="font-display text-4xl font-semibold text-teal-800 mt-2" data-count="482">0</p>
+        <p class="text-xs text-mekongga-600 font-semibold mt-2">▲ pembaruan otomatis tiap hari</p>
+      </div>
+      <div class="bg-white rounded-2xl p-7 ring-1 ring-sand-200">
+        <p class="text-sm text-ink/50 font-medium">Pengunjung bulanan</p>
+        <p class="font-display text-4xl font-semibold text-teal-800 mt-2" data-count="12750">0</p>
+        <p class="text-xs text-mekongga-600 font-semibold mt-2">▲ akumulasi bulan berjalan</p>
+      </div>
+      <div class="bg-white rounded-2xl p-7 ring-1 ring-sand-200">
+        <p class="text-sm text-ink/50 font-medium">Total entri kosakata</p>
+        <p class="font-display text-4xl font-semibold text-teal-800 mt-2" data-count="1840">0</p>
+        <p class="text-xs text-konawe-600 font-semibold mt-2">Konawe &amp; Mekongga</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BANTUAN / SSD ===================== -->
+<section id="bantuan" class="scroll-mt-24 py-20 sm:py-28 bg-white">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <span class="text-xs font-bold uppercase tracking-widest text-konawe-500">04 · Bantuan</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold text-teal-900 mt-3">Soal Sering Ditanya (SSD)</h2>
+
+    <div class="mt-8 space-y-3">
+      <details class="group bg-sand-50 rounded-2xl ring-1 ring-sand-200 open:ring-teal-300" open>
+        <summary class="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer">
+          <span class="font-semibold text-ink">Bagaimana cara mencari sebuah kata?</span>
+          <svg class="chev w-5 h-5 text-teal-600 shrink-0 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="px-5 pb-5 text-sm text-ink/65 leading-relaxed">Buka menu <b>Cari</b> di beranda, lalu ketik kata dalam Bahasa Indonesia. Kamu juga bisa menekan ikon mikrofon untuk mencari dengan suara.</p>
+      </details>
+      <details class="group bg-sand-50 rounded-2xl ring-1 ring-sand-200 open:ring-teal-300">
+        <summary class="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer">
+          <span class="font-semibold text-ink">Apa bedanya warna merah dan hijau pada kata?</span>
+          <svg class="chev w-5 h-5 text-teal-600 shrink-0 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="px-5 pb-5 text-sm text-ink/65 leading-relaxed">Warna hitam adalah Bahasa Indonesia, merah adalah padanan dalam dialek Konawe, dan hijau adalah padanan dalam dialek Mekongga.</p>
+      </details>
+      <details class="group bg-sand-50 rounded-2xl ring-1 ring-sand-200 open:ring-teal-300">
+        <summary class="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer">
+          <span class="font-semibold text-ink">Bagaimana cara mendengar pelafalan kata?</span>
+          <svg class="chev w-5 h-5 text-teal-600 shrink-0 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="px-5 pb-5 text-sm text-ink/65 leading-relaxed">Tekan ikon pengeras suara pada kartu kata untuk mendengarkan pelafalannya melalui perangkat kamu.</p>
+      </details>
+      <details class="group bg-sand-50 rounded-2xl ring-1 ring-sand-200 open:ring-teal-300">
+        <summary class="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer">
+          <span class="font-semibold text-ink">Ke mana saya menghubungi jika ada masukan?</span>
+          <svg class="chev w-5 h-5 text-teal-600 shrink-0 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="px-5 pb-5 text-sm text-ink/65 leading-relaxed">Silakan lihat bagian <b>Kontak</b> di bagian bawah laman ini untuk alamat, surel, dan nomor telepon admin BBST maupun UMK.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== KONTAK ===================== -->
+<section id="kontak" class="scroll-mt-24 py-20 sm:py-28 bg-sand-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <span class="text-xs font-bold uppercase tracking-widest text-konawe-500">05 · Kontak</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold text-teal-900 mt-3">Hubungi kami</h2>
+
+    <div class="mt-10 grid md:grid-cols-2 gap-6">
+      <div class="bg-white rounded-2xl p-7 ring-1 ring-sand-200">
+        <h3 class="font-display font-semibold text-lg text-teal-800">Balai Bahasa Provinsi Sulawesi Tenggara</h3>
+        <ul class="mt-4 space-y-3 text-sm text-ink/70">
+          <li class="flex gap-3"><svg class="w-5 h-5 text-konawe-500 shrink-0" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.2 7-11.5A7 7 0 105 9.5C5 14.8 12 21 12 21z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.5" r="2.3" stroke="currentColor" stroke-width="1.8"/></svg>Alamat kantor Balai Bahasa Provinsi Sulawesi Tenggara</li>
+          <li class="flex gap-3"><svg class="w-5 h-5 text-konawe-500 shrink-0" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="1.8"/></svg>email@bbst.kemendikdasmen.go.id</li>
+          <li class="flex gap-3"><svg class="w-5 h-5 text-konawe-500 shrink-0" viewBox="0 0 24 24" fill="none"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .3 2 .6 2.9a2 2 0 01-.5 2.1L8 10a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.5c.9.3 1.9.5 2.9.6a2 2 0 011.7 2.1z" stroke="currentColor" stroke-width="1.8"/></svg>Telepon admin BBST</li>
+        </ul>
+      </div>
+
+      <div class="bg-white rounded-2xl p-7 ring-1 ring-sand-200">
+        <h3 class="font-display font-semibold text-lg text-teal-800">Universitas Muhammadiyah Kendari</h3>
+        <ul class="mt-4 space-y-3 text-sm text-ink/70">
+          <li class="flex gap-3"><svg class="w-5 h-5 text-mekongga-500 shrink-0" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.2 7-11.5A7 7 0 105 9.5C5 14.8 12 21 12 21z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.5" r="2.3" stroke="currentColor" stroke-width="1.8"/></svg>Alamat kampus Universitas Muhammadiyah Kendari</li>
+          <li class="flex gap-3"><svg class="w-5 h-5 text-mekongga-500 shrink-0" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="1.8"/></svg>email@umkendari.ac.id</li>
+          <li class="flex gap-3"><svg class="w-5 h-5 text-mekongga-500 shrink-0" viewBox="0 0 24 24" fill="none"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .3 2 .6 2.9a2 2 0 01-.5 2.1L8 10a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.5c.9.3 1.9.5 2.9.6a2 2 0 011.7 2.1z" stroke="currentColor" stroke-width="1.8"/></svg>Telepon admin UMK</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="bg-teal-950 text-teal-100/70 py-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <img src="./assets/logo-kemendikdasmen.png" alt="Logo Kemendikdasmen" class="h-7 w-auto opacity-90" />
+      <p class="text-xs">© <span id="year"></span> Balai Bahasa Provinsi Sulawesi Tenggara &amp; UMK</p>
+    </div>
+    <p class="text-xs">Kamus Digital Indonesia–Tolaki untuk Pelajar</p>
+  </div>
+</footer>
+
+<script>
+  // ---------- Data contoh (sesuai contoh data pada dokumen) ----------
+  const WORDS = [
+    {num:1, id:'satu', konawe:'oaso', mekongga:'aso'},
+    {num:2, id:'dua', konawe:'oruo', mekongga:'ruo'},
+    {num:3, id:'tiga', konawe:'atalu', mekongga:'tolu'},
+    {num:4, id:'empat', konawe:'oomba', mekongga:'omba'},
+    {num:5, id:'lima', konawe:'olimo', mekongga:'limo'},
+    {num:6, id:'enam', konawe:'oono', mekongga:'ono'},
+    {num:7, id:'tujuh', konawe:'opitu', mekongga:'pitu'},
+    {num:8, id:'delapan', konawe:'hoalu', mekongga:'hoalu'},
+    {num:9, id:'sembilan', konawe:'asio', mekongga:'asio'},
+    {num:10, id:'sepuluh', konawe:'hopulo', mekongga:'hapulo'},
+    {num:11, id:'sebelas', konawe:'hopulo aso', mekongga:'hopulo aso'},
+    {num:20, id:'dua puluh', konawe:'ruo mbulo', mekongga:'ruombulo'},
+    {num:50, id:'lima puluh', konawe:'lima mbulo', mekongga:'limombulo'},
+    {num:100, id:'seratus', konawe:'asoetu', mekongga:'asoetu'},
+    {num:1000, id:'seribu', konawe:'sowu', mekongga:'sowu'},
+    {num:5000, id:'lima ribu', konawe:'limo sowu', mekongga:'limo sowu'},
+  ];
+
+  const grid = document.getElementById('wordGrid');
+  const emptyState = document.getElementById('emptyState');
+  const resultCount = document.getElementById('resultCount');
+  const speakerSVG = `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+  const speakerSVGLg = `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+
+  function speak(text, lang, btn){
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang || 'id-ID';
+    u.rate = 0.9;
+    if(btn){
+      btn.classList.add('scale-110');
+      u.onend = () => btn.classList.remove('scale-110');
+    }
+    window.speechSynthesis.speak(u);
+  }
+
+  function highlight(text, q){
+    if(!q) return text;
+    const i = text.toLowerCase().indexOf(q.toLowerCase());
+    if(i === -1) return text;
+    return `${text.slice(0,i)}<mark class="bg-gold-400/70 text-ink rounded px-0.5">${text.slice(i,i+q.length)}</mark>${text.slice(i+q.length)}`;
+  }
+
+  function renderWords(list, q=''){
+    grid.innerHTML = '';
+    emptyState.classList.toggle('hidden', list.length !== 0);
+    resultCount.textContent = list.length ? `${list.length} kata ditemukan` : '';
+
+    list.forEach(w => {
+      const card = document.createElement('div');
+      card.className = 'group bg-white rounded-2xl ring-1 ring-sand-200 hover:ring-teal-300 hover:shadow-md transition p-4 flex gap-4 items-start';
+      card.innerHTML = `
+        <div class="shrink-0 w-11 h-11 rounded-xl bg-teal-50 text-teal-700 font-display font-bold flex items-center justify-center text-[15px]">${w.num}</div>
+
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between gap-2">
+            <p class="font-display font-semibold text-ink text-lg leading-tight truncate">${highlight(w.id, q)}</p>
+            <button data-text="${w.id}" data-lang="id-ID"
+              class="speak-btn shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-sand-100 text-teal-700 hover:bg-teal-600 hover:text-white transition"
+              title="Dengarkan (Bahasa Indonesia)" aria-label="Dengarkan pelafalan ${w.id}">${speakerSVGLg}</button>
+          </div>
+          <p class="text-[11px] text-ink/40 font-medium mt-0.5">Bahasa Indonesia</p>
+
+          <div class="mt-3 flex flex-wrap gap-2">
+            <div class="flex items-center gap-1.5 bg-konawe-500/10 rounded-full pl-1 pr-1.5 py-1">
+              <span class="text-[10px] font-bold uppercase tracking-wide text-konawe-600 bg-white/70 rounded-full px-2 py-1">Konawe</span>
+              <span class="text-sm font-semibold text-konawe-600">${highlight(w.konawe, q)}</span>
+              <button data-text="${w.konawe}" data-lang="id-ID"
+                class="speak-btn shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full text-konawe-600 hover:bg-konawe-500 hover:text-white transition"
+                title="Dengarkan (dialek Konawe)" aria-label="Dengarkan pelafalan dialek Konawe">${speakerSVG}</button>
+            </div>
+            <div class="flex items-center gap-1.5 bg-mekongga-500/10 rounded-full pl-1 pr-1.5 py-1">
+              <span class="text-[10px] font-bold uppercase tracking-wide text-mekongga-600 bg-white/70 rounded-full px-2 py-1">Mekongga</span>
+              <span class="text-sm font-semibold text-mekongga-600">${highlight(w.mekongga, q)}</span>
+              <button data-text="${w.mekongga}" data-lang="id-ID"
+                class="speak-btn shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full text-mekongga-600 hover:bg-mekongga-500 hover:text-white transition"
+                title="Dengarkan (dialek Mekongga)" aria-label="Dengarkan pelafalan dialek Mekongga">${speakerSVG}</button>
+            </div>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    grid.querySelectorAll('.speak-btn').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        speak(btn.dataset.text, btn.dataset.lang, btn);
+      });
+    });
+  }
+  renderWords(WORDS);
+
+  // ---------- Pencarian teks ----------
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', ()=>{
+    const raw = searchInput.value.trim();
+    const q = raw.toLowerCase();
+    if(!q){ renderWords(WORDS); return; }
+    const filtered = WORDS.filter(w =>
+      w.id.toLowerCase().includes(q) ||
+      w.konawe.toLowerCase().includes(q) ||
+      w.mekongga.toLowerCase().includes(q) ||
+      String(w.num).includes(q)
+    );
+    renderWords(filtered, raw);
+  });
+
+  // ---------- Pencarian suara (mic) ----------
+  const micBtn = document.getElementById('micBtn');
+  const micStatus = document.getElementById('micStatus');
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if(SpeechRecognition){
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'id-ID';
+    recognition.interimResults = false;
+
+    micBtn.addEventListener('click', ()=>{
+      micStatus.textContent = 'Mendengarkan… silakan ucapkan kata.';
+      micBtn.classList.add('bg-konawe-500/20','text-konawe-600');
+      try { recognition.start(); } catch(e) {}
+    });
+    recognition.addEventListener('result', (e)=>{
+      const text = e.results[0][0].transcript;
+      searchInput.value = text;
+      searchInput.dispatchEvent(new Event('input'));
+      micStatus.textContent = `Hasil suara: "${text}"`;
+    });
+    recognition.addEventListener('end', ()=>{
+      micBtn.classList.remove('bg-konawe-500/20','text-konawe-600');
+    });
+    recognition.addEventListener('error', ()=>{
+      micStatus.textContent = 'Suara tidak terdengar jelas, coba lagi.';
+      micBtn.classList.remove('bg-konawe-500/20','text-konawe-600');
+    });
+  } else {
+    micBtn.addEventListener('click', ()=>{
+      micStatus.textContent = 'Pencarian suara tidak didukung pada peramban ini.';
+    });
+  }
+
+  // ---------- Mobile menu ----------
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', ()=> mobileMenu.classList.toggle('hidden'));
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', ()=> mobileMenu.classList.add('hidden')));
+
+  // ---------- Animasi angka statistik ----------
+  const counters = document.querySelectorAll('[data-count]');
+  const animateCount = (el) => {
+    const target = parseInt(el.dataset.count, 10);
+    const duration = 1200;
+    const start = performance.now();
+    function tick(now){
+      const progress = Math.min((now - start) / duration, 1);
+      el.textContent = Math.floor(progress * target).toLocaleString('id-ID');
+      if(progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  };
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){ animateCount(entry.target); io.unobserve(entry.target); }
+    });
+  }, {threshold: 0.5});
+  counters.forEach(c => io.observe(c));
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
