@@ -529,9 +529,10 @@
         <div class="flex-1 min-w-0">
           <div class="flex items-center justify-between gap-2">
             <p class="font-display font-semibold text-ink text-lg leading-tight truncate">${highlight(w.id, q)}</p>
+            ${w.audioEnabled ? `
             <button data-text="${escapeHtml(w.id ?? '')}" data-lang="id-ID" data-voice="${escapeHtml(w.voice ?? 'male')}" data-audio="${escapeHtml(w.audio ?? '')}"
               class="speak-btn shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-sand-100 text-teal-700 hover:bg-teal-600 hover:text-white transition"
-              title="Dengarkan (Bahasa Indonesia)" aria-label="Dengarkan pelafalan ${escapeHtml(w.id ?? '')}">${speakerSVGLg}</button>
+              title="Dengarkan (Bahasa Indonesia)" aria-label="Dengarkan pelafalan ${escapeHtml(w.id ?? '')}">${speakerSVGLg}</button>` : ''}
           </div>
           <p class="text-[11px] text-ink/40 font-medium mt-0.5">Bahasa Indonesia &middot; ${escapeHtml(w.category ?? '')}</p>
 
@@ -540,17 +541,19 @@
             <div class="flex items-center gap-1.5 bg-konawe-500/10 rounded-full pl-1 pr-1.5 py-1">
               <span class="text-[10px] font-bold uppercase tracking-wide text-konawe-600 bg-white/70 rounded-full px-2 py-1">Konawe</span>
               <span class="text-sm font-semibold text-konawe-600">${highlight(w.konawe, q)}</span>
+              ${w.audioEnabled ? `
               <button data-text="${escapeHtml(w.konawe)}" data-lang="id-ID" data-voice="${escapeHtml(w.voice ?? 'male')}"
                 class="speak-btn shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full text-konawe-600 hover:bg-konawe-500 hover:text-white transition"
-                title="Dengarkan (dialek Konawe)" aria-label="Dengarkan pelafalan dialek Konawe">${speakerSVG}</button>
+                title="Dengarkan (dialek Konawe)" aria-label="Dengarkan pelafalan dialek Konawe">${speakerSVG}</button>` : ''}
             </div>` : ''}
             ${w.mekongga ? `
             <div class="flex items-center gap-1.5 bg-mekongga-500/10 rounded-full pl-1 pr-1.5 py-1">
               <span class="text-[10px] font-bold uppercase tracking-wide text-mekongga-600 bg-white/70 rounded-full px-2 py-1">Mekongga</span>
               <span class="text-sm font-semibold text-mekongga-600">${highlight(w.mekongga, q)}</span>
+              ${w.audioEnabled ? `
               <button data-text="${escapeHtml(w.mekongga)}" data-lang="id-ID" data-voice="${escapeHtml(w.voice ?? 'male')}"
                 class="speak-btn shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full text-mekongga-600 hover:bg-mekongga-500 hover:text-white transition"
-                title="Dengarkan (dialek Mekongga)" aria-label="Dengarkan pelafalan dialek Mekongga">${speakerSVG}</button>
+                title="Dengarkan (dialek Mekongga)" aria-label="Dengarkan pelafalan dialek Mekongga">${speakerSVG}</button>` : ''}
             </div>` : ''}
           </div>
         </div>`;
@@ -580,15 +583,16 @@
   const wordModalSpeak = document.getElementById('wordModalSpeak');
   const wordModalDialects = document.getElementById('wordModalDialects');
 
-  function dialectBlock(label, text, colorClasses, dataText, voice){
+  function dialectBlock(label, text, colorClasses, dataText, voice, audioEnabled){
     if(!text) return '';
     return `
       <div class="flex items-center gap-3 ${colorClasses.bg} rounded-2xl pl-3 pr-2 py-2.5">
         <span class="text-[11px] font-bold uppercase tracking-wide ${colorClasses.text} bg-white/70 rounded-full px-2.5 py-1 shrink-0">${label}</span>
         <span class="flex-1 text-base font-semibold ${colorClasses.text}">${escapeHtml(text)}</span>
+        ${audioEnabled ? `
         <button data-text="${escapeHtml(dataText)}" data-lang="id-ID" data-voice="${escapeHtml(voice ?? 'male')}"
           class="speak-btn shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full ${colorClasses.text} hover:${colorClasses.hoverBg} hover:text-white transition"
-          title="Dengarkan" aria-label="Dengarkan ${escapeHtml(label)}">${speakerSVGLg}</button>
+          title="Dengarkan" aria-label="Dengarkan ${escapeHtml(label)}">${speakerSVGLg}</button>` : ''}
       </div>`;
   }
 
@@ -605,12 +609,18 @@
 
     wordModalCategory.textContent = w.category ?? '';
     wordModalTitle.textContent = w.id ?? '';
-    wordModalSpeak.innerHTML = speakerSVGLg;
-    wordModalSpeak.onclick = () => speak(w.id, 'id-ID', wordModalSpeak, w.voice, w.audio || null);
+    if(w.audioEnabled){
+      wordModalSpeak.innerHTML = speakerSVGLg;
+      wordModalSpeak.onclick = () => speak(w.id, 'id-ID', wordModalSpeak, w.voice, w.audio || null);
+      wordModalSpeak.classList.remove('hidden');
+    } else {
+      wordModalSpeak.onclick = null;
+      wordModalSpeak.classList.add('hidden');
+    }
 
     wordModalDialects.innerHTML = [
-      dialectBlock('Konawe', w.konawe, { bg: 'bg-konawe-500/10', text: 'text-konawe-600', hoverBg: 'bg-konawe-500' }, w.konawe, w.voice),
-      dialectBlock('Mekongga', w.mekongga, { bg: 'bg-mekongga-500/10', text: 'text-mekongga-600', hoverBg: 'bg-mekongga-500' }, w.mekongga, w.voice),
+      dialectBlock('Konawe', w.konawe, { bg: 'bg-konawe-500/10', text: 'text-konawe-600', hoverBg: 'bg-konawe-500' }, w.konawe, w.voice, w.audioEnabled),
+      dialectBlock('Mekongga', w.mekongga, { bg: 'bg-mekongga-500/10', text: 'text-mekongga-600', hoverBg: 'bg-mekongga-500' }, w.mekongga, w.voice, w.audioEnabled),
     ].join('');
 
     wordModalDialects.querySelectorAll('.speak-btn').forEach(btn=>{

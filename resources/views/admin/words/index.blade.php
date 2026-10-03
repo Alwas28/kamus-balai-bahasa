@@ -52,7 +52,9 @@
                             <td class="px-6 py-3.5 text-mekongga-600 font-medium">{{ $word->word_mekongga ?? '—' }}</td>
                             <td class="px-6 py-3.5 text-ink/60">{{ $word->category?->name }}</td>
                             <td class="px-6 py-3.5">
-                                @if ($word->audio_source === 'local' && $word->audio_path)
+                                @if (! $word->audio_enabled)
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide bg-konawe-500/10 text-konawe-600 px-2.5 py-1 rounded-full">Nonaktif</span>
+                                @elseif ($word->audio_source === 'local' && $word->audio_path)
                                     <span class="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide bg-teal-50 text-teal-700 px-2.5 py-1 rounded-full">Lokal</span>
                                 @else
                                     <span class="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide bg-sand-100 text-ink/50 px-2.5 py-1 rounded-full">

@@ -25,10 +25,18 @@ class Word extends Model
         'word_mekongga',
         'image_path',
         'audio_path',
+        'audio_enabled',
         'audio_source',
         'audio_voice',
         'order',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'audio_enabled' => 'boolean',
+        ];
+    }
 
     public function category(): BelongsTo
     {
@@ -44,7 +52,7 @@ class Word extends Model
 
     public function audioUrl(): ?string
     {
-        if ($this->audio_source !== self::AUDIO_SOURCE_LOCAL || ! $this->audio_path) {
+        if (! $this->audio_enabled || $this->audio_source !== self::AUDIO_SOURCE_LOCAL || ! $this->audio_path) {
             return null;
         }
 

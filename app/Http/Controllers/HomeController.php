@@ -23,6 +23,7 @@ class HomeController extends Controller
                 'image' => $word->imageUrl(),
                 'audio' => $word->audioUrl(),
                 'voice' => $word->audio_voice,
+                'audioEnabled' => $word->audio_enabled,
             ]))
             ->values();
 

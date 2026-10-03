@@ -86,6 +86,7 @@ class WordController extends Controller
             'order' => ['nullable', 'integer', 'min:0'],
             'image' => ['nullable', 'image', 'max:2048'],
             'remove_image' => ['nullable', 'boolean'],
+            'audio_enabled' => ['required', 'boolean'],
             'audio_source' => ['required', 'in:local,auto'],
             'audio_voice' => ['required', 'in:male,female'],
             'audio' => ['nullable', 'file', 'mimes:mp3,wav,ogg,m4a,aac', 'max:5120'],
@@ -94,7 +95,8 @@ class WordController extends Controller
 
         $willKeepExistingAudio = $word?->audio_path && ! $request->boolean('remove_audio');
 
-        if ($data['audio_source'] === Word::AUDIO_SOURCE_LOCAL
+        if ($data['audio_enabled']
+            && $data['audio_source'] === Word::AUDIO_SOURCE_LOCAL
             && ! $request->hasFile('audio')
             && ! $willKeepExistingAudio) {
             throw ValidationException::withMessages([
