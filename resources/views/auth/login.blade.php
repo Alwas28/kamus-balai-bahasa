@@ -49,10 +49,5 @@
         <x-primary-button class="w-full justify-center mt-6">
             {{ __('Masuk') }}
         </x-primary-button>
-
-        <p class="text-center text-sm text-ink/60 mt-5">
-            Belum punya akun?
-            <a href="{{ route('register') }}" class="text-teal-700 hover:text-teal-900 font-semibold">Daftar sekarang</a>
-        </p>
     </form>
 </x-guest-layout>

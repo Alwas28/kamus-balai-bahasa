@@ -74,8 +74,7 @@
             </div>
           </div>
         @else
-          <a href="{{ route('login') }}" class="text-teal-800 hover:text-teal-900 text-sm font-semibold px-4 py-2.5 rounded-full transition">Masuk</a>
-          <a href="{{ route('register') }}" class="inline-flex items-center gap-2 bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold px-5 py-2.5 rounded-full transition shadow-sm">Daftar</a>
+          <a href="{{ route('login') }}" class="inline-flex items-center gap-2 bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold px-5 py-2.5 rounded-full transition shadow-sm">Masuk</a>
         @endauth
       </div>
 
@@ -108,8 +107,7 @@
             <button type="submit" class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-konawe-500/10 text-konawe-600">Keluar</button>
           </form>
         @else
-          <a href="{{ route('login') }}" class="px-3 py-2.5 rounded-lg hover:bg-teal-50">Masuk</a>
-          <a href="{{ route('register') }}" class="px-3 py-2.5 rounded-lg bg-teal-700 text-white text-center font-semibold">Daftar</a>
+          <a href="{{ route('login') }}" class="px-3 py-2.5 rounded-lg bg-teal-700 text-white text-center font-semibold">Masuk</a>
         @endauth
       </div>
     </div>
@@ -146,8 +144,7 @@
 
         @guest
         <div class="mt-8 flex flex-wrap gap-3">
-          <a href="{{ route('register') }}" class="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-teal-950 font-semibold px-6 py-3 rounded-full transition shadow-pin">Daftar Gratis</a>
-          <a href="{{ route('login') }}" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 ring-1 ring-white/20 text-sand-50 font-semibold px-6 py-3 rounded-full transition">Masuk</a>
+          <a href="{{ route('login') }}" class="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-teal-950 font-semibold px-6 py-3 rounded-full transition shadow-pin">Masuk</a>
         </div>
         @endguest
       </div>
@@ -542,7 +539,7 @@
               <span class="text-[10px] font-bold uppercase tracking-wide text-konawe-600 bg-white/70 rounded-full px-2 py-1">Konawe</span>
               <span class="text-sm font-semibold text-konawe-600">${highlight(w.konawe, q)}</span>
               ${w.audioEnabled ? `
-              <button data-text="${escapeHtml(w.konawe)}" data-lang="id-ID" data-voice="${escapeHtml(w.voice ?? 'male')}"
+              <button data-text="${escapeHtml(w.konawe)}" data-lang="id-ID" data-voice="${escapeHtml(w.voice ?? 'male')}" data-audio="${escapeHtml(w.audioKonawe ?? '')}"
                 class="speak-btn shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full text-konawe-600 hover:bg-konawe-500 hover:text-white transition"
                 title="Dengarkan (dialek Konawe)" aria-label="Dengarkan pelafalan dialek Konawe">${speakerSVG}</button>` : ''}
             </div>` : ''}
@@ -551,7 +548,7 @@
               <span class="text-[10px] font-bold uppercase tracking-wide text-mekongga-600 bg-white/70 rounded-full px-2 py-1">Mekongga</span>
               <span class="text-sm font-semibold text-mekongga-600">${highlight(w.mekongga, q)}</span>
               ${w.audioEnabled ? `
-              <button data-text="${escapeHtml(w.mekongga)}" data-lang="id-ID" data-voice="${escapeHtml(w.voice ?? 'male')}"
+              <button data-text="${escapeHtml(w.mekongga)}" data-lang="id-ID" data-voice="${escapeHtml(w.voice ?? 'male')}" data-audio="${escapeHtml(w.audioMekongga ?? '')}"
                 class="speak-btn shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full text-mekongga-600 hover:bg-mekongga-500 hover:text-white transition"
                 title="Dengarkan (dialek Mekongga)" aria-label="Dengarkan pelafalan dialek Mekongga">${speakerSVG}</button>` : ''}
             </div>` : ''}
@@ -583,14 +580,14 @@
   const wordModalSpeak = document.getElementById('wordModalSpeak');
   const wordModalDialects = document.getElementById('wordModalDialects');
 
-  function dialectBlock(label, text, colorClasses, dataText, voice, audioEnabled){
+  function dialectBlock(label, text, colorClasses, dataText, voice, audioEnabled, audioUrl){
     if(!text) return '';
     return `
       <div class="flex items-center gap-3 ${colorClasses.bg} rounded-2xl pl-3 pr-2 py-2.5">
         <span class="text-[11px] font-bold uppercase tracking-wide ${colorClasses.text} bg-white/70 rounded-full px-2.5 py-1 shrink-0">${label}</span>
         <span class="flex-1 text-base font-semibold ${colorClasses.text}">${escapeHtml(text)}</span>
         ${audioEnabled ? `
-        <button data-text="${escapeHtml(dataText)}" data-lang="id-ID" data-voice="${escapeHtml(voice ?? 'male')}"
+        <button data-text="${escapeHtml(dataText)}" data-lang="id-ID" data-voice="${escapeHtml(voice ?? 'male')}" data-audio="${escapeHtml(audioUrl ?? '')}"
           class="speak-btn shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full ${colorClasses.text} hover:${colorClasses.hoverBg} hover:text-white transition"
           title="Dengarkan" aria-label="Dengarkan ${escapeHtml(label)}">${speakerSVGLg}</button>` : ''}
       </div>`;
@@ -619,14 +616,14 @@
     }
 
     wordModalDialects.innerHTML = [
-      dialectBlock('Konawe', w.konawe, { bg: 'bg-konawe-500/10', text: 'text-konawe-600', hoverBg: 'bg-konawe-500' }, w.konawe, w.voice, w.audioEnabled),
-      dialectBlock('Mekongga', w.mekongga, { bg: 'bg-mekongga-500/10', text: 'text-mekongga-600', hoverBg: 'bg-mekongga-500' }, w.mekongga, w.voice, w.audioEnabled),
+      dialectBlock('Konawe', w.konawe, { bg: 'bg-konawe-500/10', text: 'text-konawe-600', hoverBg: 'bg-konawe-500' }, w.konawe, w.voice, w.audioEnabled, w.audioKonawe),
+      dialectBlock('Mekongga', w.mekongga, { bg: 'bg-mekongga-500/10', text: 'text-mekongga-600', hoverBg: 'bg-mekongga-500' }, w.mekongga, w.voice, w.audioEnabled, w.audioMekongga),
     ].join('');
 
     wordModalDialects.querySelectorAll('.speak-btn').forEach(btn=>{
       btn.addEventListener('click', (e)=>{
         e.stopPropagation();
-        speak(btn.dataset.text, btn.dataset.lang, btn, btn.dataset.voice);
+        speak(btn.dataset.text, btn.dataset.lang, btn, btn.dataset.voice, btn.dataset.audio || null);
       });
     });
 

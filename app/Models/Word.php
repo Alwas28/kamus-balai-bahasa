@@ -18,6 +18,26 @@ class Word extends Model
 
     public const AUDIO_VOICE_FEMALE = 'female';
 
+    /**
+     * Audio language key => column holding that language's uploaded audio file.
+     *
+     * @var array<string, string>
+     */
+    public const AUDIO_LANGUAGE_COLUMNS = [
+        'id' => 'audio_path',
+        'konawe' => 'audio_konawe_path',
+        'mekongga' => 'audio_mekongga_path',
+    ];
+
+    /**
+     * @var array<string, string>
+     */
+    public const AUDIO_LANGUAGE_LABELS = [
+        'id' => 'Bahasa Indonesia',
+        'konawe' => 'Dialek Konawe',
+        'mekongga' => 'Dialek Mekongga',
+    ];
+
     protected $fillable = [
         'category_id',
         'word_id',
@@ -25,6 +45,8 @@ class Word extends Model
         'word_mekongga',
         'image_path',
         'audio_path',
+        'audio_konawe_path',
+        'audio_mekongga_path',
         'audio_enabled',
         'audio_source',
         'audio_voice',
@@ -50,12 +72,24 @@ class Word extends Model
         return $this->image_path ? '/storage/'.$this->image_path : null;
     }
 
-    public function audioUrl(): ?string
+    public function audioPath(string $language = 'id'): ?string
     {
-        if (! $this->audio_enabled || $this->audio_source !== self::AUDIO_SOURCE_LOCAL || ! $this->audio_path) {
+        return $this->{self::AUDIO_LANGUAGE_COLUMNS[$language]};
+    }
+
+    public function hasLocalAudio(): bool
+    {
+        return collect(self::AUDIO_LANGUAGE_COLUMNS)->contains(fn (string $column) => filled($this->{$column}));
+    }
+
+    public function audioUrl(string $language = 'id'): ?string
+    {
+        $path = $this->audioPath($language);
+
+        if (! $this->audio_enabled || $this->audio_source !== self::AUDIO_SOURCE_LOCAL || ! $path) {
             return null;
         }
 
-        return '/storage/'.$this->audio_path;
+        return '/storage/'.$path;
     }
 }

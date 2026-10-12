@@ -21,7 +21,9 @@ class HomeController extends Controller
                 'mekongga' => $word->word_mekongga,
                 'category' => $category->name,
                 'image' => $word->imageUrl(),
-                'audio' => $word->audioUrl(),
+                'audio' => $word->audioUrl('id'),
+                'audioKonawe' => $word->audioUrl('konawe'),
+                'audioMekongga' => $word->audioUrl('mekongga'),
                 'voice' => $word->audio_voice,
                 'audioEnabled' => $word->audio_enabled,
             ]))

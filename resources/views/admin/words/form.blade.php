@@ -136,20 +136,29 @@
                     </div>
 
                     {{-- Lokal: unggah berkas --}}
-                    <div x-show="source === 'local'" x-cloak class="mt-4">
-                        @if ($word->exists && $word->audio_source === 'local' && $word->audio_path)
-                            <div class="flex items-center gap-3 mb-3 bg-sand-50 ring-1 ring-sand-200 rounded-xl p-3">
-                                <audio controls src="{{ '/storage/'.$word->audio_path }}" class="h-9 flex-1 min-w-0"></audio>
-                                <label class="inline-flex items-center gap-2 text-xs text-konawe-600 shrink-0">
-                                    <input type="checkbox" name="remove_audio" value="1" class="rounded border-sand-300 text-konawe-500 focus:ring-konawe-500">
-                                    Hapus
-                                </label>
-                            </div>
-                        @endif
+                    <div x-show="source === 'local'" x-cloak class="mt-4 space-y-4">
+                        <p class="text-xs text-ink/50">Unggah rekaman untuk tiap bahasa. Bahasa tanpa rekaman akan dibacakan otomatis. Format MP3/WAV/OGG/M4A, maks. 5MB.</p>
 
-                        <input id="audio" name="audio" type="file" accept="audio/*"
-                            class="block w-full text-sm text-ink file:mr-4 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 border-2 border-sand-200 rounded-xl focus:border-teal-500 focus:ring-teal-500">
-                        <p class="text-xs text-ink/50 mt-1.5">Format MP3/WAV/OGG/M4A, maks. 5MB.</p>
+                        @foreach (\App\Models\Word::AUDIO_LANGUAGE_LABELS as $language => $label)
+                            <div class="rounded-xl ring-1 ring-sand-200 p-3.5">
+                                <x-input-label :for="'audio_'.$language" :value="'Audio '.$label" />
+
+                                @if ($word->exists && $word->audio_source === 'local' && $word->audioPath($language))
+                                    <div class="flex items-center gap-3 mt-2 bg-sand-50 ring-1 ring-sand-200 rounded-xl p-3">
+                                        <audio controls src="{{ '/storage/'.$word->audioPath($language) }}" class="h-9 flex-1 min-w-0"></audio>
+                                        <label class="inline-flex items-center gap-2 text-xs text-konawe-600 shrink-0">
+                                            <input type="checkbox" name="remove_audio[{{ $language }}]" value="1" class="rounded border-sand-300 text-konawe-500 focus:ring-konawe-500">
+                                            Hapus
+                                        </label>
+                                    </div>
+                                @endif
+
+                                <input id="audio_{{ $language }}" name="audio[{{ $language }}]" type="file" accept="audio/*"
+                                    class="block w-full mt-2 text-sm text-ink file:mr-4 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 border-2 border-sand-200 rounded-xl focus:border-teal-500 focus:ring-teal-500">
+                                <x-input-error :messages="$errors->get('audio.'.$language)" class="mt-2" />
+                            </div>
+                        @endforeach
+
                         <x-input-error :messages="$errors->get('audio')" class="mt-2" />
                     </div>
                 </div>

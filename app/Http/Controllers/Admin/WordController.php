@@ -67,8 +67,10 @@ class WordController extends Controller
         if ($word->image_path) {
             Storage::disk('public')->delete($word->image_path);
         }
-        if ($word->audio_path) {
-            Storage::disk('public')->delete($word->audio_path);
+        foreach (array_keys(Word::AUDIO_LANGUAGE_COLUMNS) as $language) {
+            if ($path = $word->audioPath($language)) {
+                Storage::disk('public')->delete($path);
+            }
         }
 
         $word->delete();
@@ -89,18 +91,22 @@ class WordController extends Controller
             'audio_enabled' => ['required', 'boolean'],
             'audio_source' => ['required', 'in:local,auto'],
             'audio_voice' => ['required', 'in:male,female'],
-            'audio' => ['nullable', 'file', 'mimes:mp3,wav,ogg,m4a,aac', 'max:5120'],
-            'remove_audio' => ['nullable', 'boolean'],
+            'audio' => ['nullable', 'array:id,konawe,mekongga'],
+            'audio.*' => ['nullable', 'file', 'mimes:mp3,wav,ogg,m4a,aac', 'max:5120'],
+            'remove_audio' => ['nullable', 'array:id,konawe,mekongga'],
+            'remove_audio.*' => ['nullable', 'boolean'],
         ]);
 
-        $willKeepExistingAudio = $word?->audio_path && ! $request->boolean('remove_audio');
+        $willHaveAnyAudio = collect(array_keys(Word::AUDIO_LANGUAGE_COLUMNS))->contains(
+            fn (string $language) => $request->hasFile("audio.{$language}")
+                || ($word?->audioPath($language) && ! $request->boolean("remove_audio.{$language}"))
+        );
 
         if ($data['audio_enabled']
             && $data['audio_source'] === Word::AUDIO_SOURCE_LOCAL
-            && ! $request->hasFile('audio')
-            && ! $willKeepExistingAudio) {
+            && ! $willHaveAnyAudio) {
             throw ValidationException::withMessages([
-                'audio' => 'Unggah berkas audio, atau pilih Audio Otomatis.',
+                'audio' => 'Unggah minimal satu berkas audio (Indonesia, Konawe, atau Mekongga), atau pilih Audio Otomatis.',
             ]);
         }
 
@@ -121,21 +127,29 @@ class WordController extends Controller
             $data['image_path'] = $request->file('image')->store('words/images', 'public');
         }
 
-        if ($data['audio_source'] === Word::AUDIO_SOURCE_AUTO) {
-            if ($word?->audio_path) {
-                Storage::disk('public')->delete($word->audio_path);
-            }
-            $data['audio_path'] = null;
-        } elseif ($request->boolean('remove_audio') && $word?->audio_path) {
-            Storage::disk('public')->delete($word->audio_path);
-            $data['audio_path'] = null;
-        }
+        foreach (Word::AUDIO_LANGUAGE_COLUMNS as $language => $column) {
+            $existingPath = $word?->audioPath($language);
 
-        if ($request->hasFile('audio')) {
-            if ($word?->audio_path) {
-                Storage::disk('public')->delete($word->audio_path);
+            if ($data['audio_source'] === Word::AUDIO_SOURCE_AUTO) {
+                if ($existingPath) {
+                    Storage::disk('public')->delete($existingPath);
+                }
+                $data[$column] = null;
+
+                continue;
             }
-            $data['audio_path'] = $request->file('audio')->store('words/audio', 'public');
+
+            if ($request->boolean("remove_audio.{$language}") && $existingPath) {
+                Storage::disk('public')->delete($existingPath);
+                $data[$column] = null;
+            }
+
+            if ($request->hasFile("audio.{$language}")) {
+                if ($existingPath) {
+                    Storage::disk('public')->delete($existingPath);
+                }
+                $data[$column] = $request->file("audio.{$language}")->store('words/audio', 'public');
+            }
         }
 
         unset($data['image'], $data['audio'], $data['remove_image'], $data['remove_audio']);
