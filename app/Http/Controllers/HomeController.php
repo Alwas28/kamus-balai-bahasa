@@ -24,7 +24,9 @@ class HomeController extends Controller
                 'audio' => $word->audioUrl('id'),
                 'audioKonawe' => $word->audioUrl('konawe'),
                 'audioMekongga' => $word->audioUrl('mekongga'),
-                'voice' => $word->audio_voice,
+                'voice' => $word->audioVoice('id'),
+                'voiceKonawe' => $word->audioVoice('konawe'),
+                'voiceMekongga' => $word->audioVoice('mekongga'),
                 'audioEnabled' => $word->audio_enabled,
             ]))
             ->values();

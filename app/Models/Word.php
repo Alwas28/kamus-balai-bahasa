@@ -19,23 +19,14 @@ class Word extends Model
     public const AUDIO_VOICE_FEMALE = 'female';
 
     /**
-     * Audio language key => column holding that language's uploaded audio file.
+     * Audio settings per language: label plus the columns holding its source, TTS voice and uploaded file.
      *
-     * @var array<string, string>
+     * @var array<string, array{label: string, source: string, voice: string, path: string}>
      */
-    public const AUDIO_LANGUAGE_COLUMNS = [
-        'id' => 'audio_path',
-        'konawe' => 'audio_konawe_path',
-        'mekongga' => 'audio_mekongga_path',
-    ];
-
-    /**
-     * @var array<string, string>
-     */
-    public const AUDIO_LANGUAGE_LABELS = [
-        'id' => 'Bahasa Indonesia',
-        'konawe' => 'Dialek Konawe',
-        'mekongga' => 'Dialek Mekongga',
+    public const AUDIO_LANGUAGES = [
+        'id' => ['label' => 'Bahasa Indonesia', 'source' => 'audio_source', 'voice' => 'audio_voice', 'path' => 'audio_path'],
+        'konawe' => ['label' => 'Dialek Konawe', 'source' => 'audio_konawe_source', 'voice' => 'audio_konawe_voice', 'path' => 'audio_konawe_path'],
+        'mekongga' => ['label' => 'Dialek Mekongga', 'source' => 'audio_mekongga_source', 'voice' => 'audio_mekongga_voice', 'path' => 'audio_mekongga_path'],
     ];
 
     protected $fillable = [
@@ -50,6 +41,10 @@ class Word extends Model
         'audio_enabled',
         'audio_source',
         'audio_voice',
+        'audio_konawe_source',
+        'audio_konawe_voice',
+        'audio_mekongga_source',
+        'audio_mekongga_voice',
         'order',
     ];
 
@@ -72,24 +67,32 @@ class Word extends Model
         return $this->image_path ? '/storage/'.$this->image_path : null;
     }
 
-    public function audioPath(string $language = 'id'): ?string
+    public function audioSource(string $language = 'id'): string
     {
-        return $this->{self::AUDIO_LANGUAGE_COLUMNS[$language]};
+        return $this->{self::AUDIO_LANGUAGES[$language]['source']} ?? self::AUDIO_SOURCE_AUTO;
     }
 
-    public function hasLocalAudio(): bool
+    public function audioVoice(string $language = 'id'): string
     {
-        return collect(self::AUDIO_LANGUAGE_COLUMNS)->contains(fn (string $column) => filled($this->{$column}));
+        return $this->{self::AUDIO_LANGUAGES[$language]['voice']} ?? self::AUDIO_VOICE_MALE;
+    }
+
+    public function audioPath(string $language = 'id'): ?string
+    {
+        return $this->{self::AUDIO_LANGUAGES[$language]['path']};
+    }
+
+    public function usesLocalAudio(string $language = 'id'): bool
+    {
+        return $this->audioSource($language) === self::AUDIO_SOURCE_LOCAL && filled($this->audioPath($language));
     }
 
     public function audioUrl(string $language = 'id'): ?string
     {
-        $path = $this->audioPath($language);
-
-        if (! $this->audio_enabled || $this->audio_source !== self::AUDIO_SOURCE_LOCAL || ! $path) {
+        if (! $this->audio_enabled || ! $this->usesLocalAudio($language)) {
             return null;
         }
 
-        return '/storage/'.$path;
+        return '/storage/'.$this->audioPath($language);
     }
 }

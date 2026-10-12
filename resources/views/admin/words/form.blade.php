@@ -64,10 +64,7 @@
 
             {{-- Audio --}}
             <div class="mt-6 pt-6 border-t border-sand-100"
-                x-data="{
-                    enabled: '{{ old('audio_enabled', ($word->audio_enabled ?? true) ? '1' : '0') }}',
-                    source: '{{ old('audio_source', $word->audio_source ?? 'auto') }}'
-                }">
+                x-data="{ enabled: '{{ old('audio_enabled', ($word->audio_enabled ?? true) ? '1' : '0') }}' }">
                 <x-input-label value="Audio Pelafalan" />
                 <p class="text-xs text-ink/50 mt-1 mb-3">Tentukan apakah audio pelafalan ditampilkan untuk kata ini.</p>
 
@@ -93,74 +90,63 @@
 
                 <div x-show="enabled === '1'" x-cloak class="mt-5 pt-5 border-t border-sand-100">
                     <x-input-label value="Sumber Audio" />
-                    <p class="text-xs text-ink/50 mt-1 mb-3">Pilih sumber suara pelafalan kata ini.</p>
+                    <p class="text-xs text-ink/50 mt-1 mb-3">Atur sumber suara tiap bahasa. <strong>Otomatis</strong> dibacakan perangkat (text-to-speech), <strong>Lokal</strong> memakai rekaman yang diunggah (MP3/WAV/OGG/M4A, maks. 5MB).</p>
 
-                    <div class="grid sm:grid-cols-2 gap-3">
-                        <label class="flex items-start gap-3 rounded-xl border-2 p-3.5 cursor-pointer transition"
-                            :class="source === 'auto' ? 'border-teal-500 bg-teal-50/60' : 'border-sand-200 hover:border-sand-300'">
-                            <input type="radio" name="audio_source" value="auto" x-model="source" class="mt-0.5 text-teal-600 focus:ring-teal-500">
-                            <span>
-                                <span class="block text-sm font-semibold text-ink">Audio Otomatis</span>
-                                <span class="block text-xs text-ink/50 mt-0.5">Dibacakan otomatis oleh perangkat (text-to-speech).</span>
-                            </span>
-                        </label>
-                        <label class="flex items-start gap-3 rounded-xl border-2 p-3.5 cursor-pointer transition"
-                            :class="source === 'local' ? 'border-teal-500 bg-teal-50/60' : 'border-sand-200 hover:border-sand-300'">
-                            <input type="radio" name="audio_source" value="local" x-model="source" class="mt-0.5 text-teal-600 focus:ring-teal-500">
-                            <span>
-                                <span class="block text-sm font-semibold text-ink">Audio Lokal</span>
-                                <span class="block text-xs text-ink/50 mt-0.5">Gunakan berkas rekaman suara yang diunggah.</span>
-                            </span>
-                        </label>
-                    </div>
-                    <x-input-error :messages="$errors->get('audio_source')" class="mt-2" />
+                    <div class="space-y-4">
+                        @foreach (\App\Models\Word::AUDIO_LANGUAGES as $language => $audioLanguage)
+                            @php
+                                $languageSource = old("audio_source.{$language}", $word->audioSource($language));
+                                $languageVoice = old("audio_voice.{$language}", $word->audioVoice($language));
+                            @endphp
+                            <div class="rounded-xl ring-1 ring-sand-200 p-3.5" x-data="{ source: '{{ $languageSource }}' }">
+                                <p class="text-sm font-semibold text-ink">Audio {{ $audioLanguage['label'] }}</p>
 
-                    {{-- Jenis suara text-to-speech: dipakai pada mode otomatis, dan pada mode lokal untuk bahasa tanpa rekaman --}}
-                    <div class="mt-4">
-                        <x-input-label value="Jenis Suara Otomatis" />
-                        <p class="text-xs text-ink/50 mt-1" x-show="source === 'local'" x-cloak>Dipakai untuk bahasa yang tidak diunggah rekamannya.</p>
-                        <div class="flex flex-wrap gap-3 mt-1.5">
-                            <label class="inline-flex items-center gap-2 text-sm text-ink bg-sand-50 ring-1 ring-sand-200 rounded-full px-4 py-2 cursor-pointer">
-                                <input type="radio" name="audio_voice" value="male"
-                                    @checked(old('audio_voice', $word->audio_voice ?? 'male') === 'male')
-                                    class="text-teal-600 focus:ring-teal-500">
-                                Laki-laki
-                            </label>
-                            <label class="inline-flex items-center gap-2 text-sm text-ink bg-sand-50 ring-1 ring-sand-200 rounded-full px-4 py-2 cursor-pointer">
-                                <input type="radio" name="audio_voice" value="female"
-                                    @checked(old('audio_voice', $word->audio_voice ?? 'male') === 'female')
-                                    class="text-teal-600 focus:ring-teal-500">
-                                Perempuan
-                            </label>
-                        </div>
-                        <x-input-error :messages="$errors->get('audio_voice')" class="mt-2" />
-                    </div>
+                                <div class="grid grid-cols-2 gap-2 mt-2">
+                                    <label class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm cursor-pointer transition"
+                                        :class="source === 'auto' ? 'border-teal-500 bg-teal-50/60 font-semibold' : 'border-sand-200 hover:border-sand-300'">
+                                        <input type="radio" name="audio_source[{{ $language }}]" value="auto" x-model="source" class="text-teal-600 focus:ring-teal-500">
+                                        Otomatis
+                                    </label>
+                                    <label class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm cursor-pointer transition"
+                                        :class="source === 'local' ? 'border-teal-500 bg-teal-50/60 font-semibold' : 'border-sand-200 hover:border-sand-300'">
+                                        <input type="radio" name="audio_source[{{ $language }}]" value="local" x-model="source" class="text-teal-600 focus:ring-teal-500">
+                                        Lokal
+                                    </label>
+                                </div>
+                                <x-input-error :messages="$errors->get('audio_source.'.$language)" class="mt-2" />
 
-                    {{-- Lokal: unggah berkas --}}
-                    <div x-show="source === 'local'" x-cloak class="mt-4 space-y-4">
-                        <p class="text-xs text-ink/50">Unggah rekaman hanya untuk bahasa yang diinginkan. Misalnya, kosongkan Bahasa Indonesia agar tetap dibacakan otomatis, lalu unggah rekaman Konawe dan Mekongga. Format MP3/WAV/OGG/M4A, maks. 5MB.</p>
+                                {{-- Otomatis: pilihan jenis suara --}}
+                                <div x-show="source === 'auto'" x-cloak class="flex flex-wrap items-center gap-3 mt-3">
+                                    <span class="text-xs text-ink/50">Jenis suara:</span>
+                                    <label class="inline-flex items-center gap-2 text-sm text-ink bg-sand-50 ring-1 ring-sand-200 rounded-full px-4 py-1.5 cursor-pointer">
+                                        <input type="radio" name="audio_voice[{{ $language }}]" value="male" @checked($languageVoice === 'male') class="text-teal-600 focus:ring-teal-500">
+                                        Laki-laki
+                                    </label>
+                                    <label class="inline-flex items-center gap-2 text-sm text-ink bg-sand-50 ring-1 ring-sand-200 rounded-full px-4 py-1.5 cursor-pointer">
+                                        <input type="radio" name="audio_voice[{{ $language }}]" value="female" @checked($languageVoice === 'female') class="text-teal-600 focus:ring-teal-500">
+                                        Perempuan
+                                    </label>
+                                </div>
+                                <x-input-error :messages="$errors->get('audio_voice.'.$language)" class="mt-2" />
 
-                        @foreach (\App\Models\Word::AUDIO_LANGUAGE_LABELS as $language => $label)
-                            <div class="rounded-xl ring-1 ring-sand-200 p-3.5">
-                                <x-input-label :for="'audio_'.$language" :value="'Audio '.$label" />
+                                {{-- Lokal: unggah berkas --}}
+                                <div x-show="source === 'local'" x-cloak class="mt-3">
+                                    @if ($word->exists && $word->audioPath($language))
+                                        <div class="flex items-center gap-3 mb-2 bg-sand-50 ring-1 ring-sand-200 rounded-xl p-3">
+                                            <audio controls src="{{ '/storage/'.$word->audioPath($language) }}" class="h-9 flex-1 min-w-0"></audio>
+                                            <label class="inline-flex items-center gap-2 text-xs text-konawe-600 shrink-0">
+                                                <input type="checkbox" name="remove_audio[{{ $language }}]" value="1" class="rounded border-sand-300 text-konawe-500 focus:ring-konawe-500">
+                                                Hapus
+                                            </label>
+                                        </div>
+                                    @endif
 
-                                @if ($word->exists && $word->audio_source === 'local' && $word->audioPath($language))
-                                    <div class="flex items-center gap-3 mt-2 bg-sand-50 ring-1 ring-sand-200 rounded-xl p-3">
-                                        <audio controls src="{{ '/storage/'.$word->audioPath($language) }}" class="h-9 flex-1 min-w-0"></audio>
-                                        <label class="inline-flex items-center gap-2 text-xs text-konawe-600 shrink-0">
-                                            <input type="checkbox" name="remove_audio[{{ $language }}]" value="1" class="rounded border-sand-300 text-konawe-500 focus:ring-konawe-500">
-                                            Hapus
-                                        </label>
-                                    </div>
-                                @endif
-
-                                <input id="audio_{{ $language }}" name="audio[{{ $language }}]" type="file" accept="audio/*"
-                                    class="block w-full mt-2 text-sm text-ink file:mr-4 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 border-2 border-sand-200 rounded-xl focus:border-teal-500 focus:ring-teal-500">
+                                    <input id="audio_{{ $language }}" name="audio[{{ $language }}]" type="file" accept="audio/*"
+                                        class="block w-full text-sm text-ink file:mr-4 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 border-2 border-sand-200 rounded-xl focus:border-teal-500 focus:ring-teal-500">
+                                </div>
                                 <x-input-error :messages="$errors->get('audio.'.$language)" class="mt-2" />
                             </div>
                         @endforeach
-
-                        <x-input-error :messages="$errors->get('audio')" class="mt-2" />
                     </div>
                 </div>
             </div>

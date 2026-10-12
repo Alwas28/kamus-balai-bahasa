@@ -539,7 +539,7 @@
               <span class="text-[10px] font-bold uppercase tracking-wide text-konawe-600 bg-white/70 rounded-full px-2 py-1">Konawe</span>
               <span class="text-sm font-semibold text-konawe-600">${highlight(w.konawe, q)}</span>
               ${w.audioEnabled ? `
-              <button data-text="${escapeHtml(w.konawe)}" data-lang="id-ID" data-voice="${escapeHtml(w.voice ?? 'male')}" data-audio="${escapeHtml(w.audioKonawe ?? '')}"
+              <button data-text="${escapeHtml(w.konawe)}" data-lang="id-ID" data-voice="${escapeHtml(w.voiceKonawe ?? 'male')}" data-audio="${escapeHtml(w.audioKonawe ?? '')}"
                 class="speak-btn shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full text-konawe-600 hover:bg-konawe-500 hover:text-white transition"
                 title="Dengarkan (dialek Konawe)" aria-label="Dengarkan pelafalan dialek Konawe">${speakerSVG}</button>` : ''}
             </div>` : ''}
@@ -548,7 +548,7 @@
               <span class="text-[10px] font-bold uppercase tracking-wide text-mekongga-600 bg-white/70 rounded-full px-2 py-1">Mekongga</span>
               <span class="text-sm font-semibold text-mekongga-600">${highlight(w.mekongga, q)}</span>
               ${w.audioEnabled ? `
-              <button data-text="${escapeHtml(w.mekongga)}" data-lang="id-ID" data-voice="${escapeHtml(w.voice ?? 'male')}" data-audio="${escapeHtml(w.audioMekongga ?? '')}"
+              <button data-text="${escapeHtml(w.mekongga)}" data-lang="id-ID" data-voice="${escapeHtml(w.voiceMekongga ?? 'male')}" data-audio="${escapeHtml(w.audioMekongga ?? '')}"
                 class="speak-btn shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full text-mekongga-600 hover:bg-mekongga-500 hover:text-white transition"
                 title="Dengarkan (dialek Mekongga)" aria-label="Dengarkan pelafalan dialek Mekongga">${speakerSVG}</button>` : ''}
             </div>` : ''}
@@ -616,8 +616,8 @@
     }
 
     wordModalDialects.innerHTML = [
-      dialectBlock('Konawe', w.konawe, { bg: 'bg-konawe-500/10', text: 'text-konawe-600', hoverBg: 'bg-konawe-500' }, w.konawe, w.voice, w.audioEnabled, w.audioKonawe),
-      dialectBlock('Mekongga', w.mekongga, { bg: 'bg-mekongga-500/10', text: 'text-mekongga-600', hoverBg: 'bg-mekongga-500' }, w.mekongga, w.voice, w.audioEnabled, w.audioMekongga),
+      dialectBlock('Konawe', w.konawe, { bg: 'bg-konawe-500/10', text: 'text-konawe-600', hoverBg: 'bg-konawe-500' }, w.konawe, w.voiceKonawe, w.audioEnabled, w.audioKonawe),
+      dialectBlock('Mekongga', w.mekongga, { bg: 'bg-mekongga-500/10', text: 'text-mekongga-600', hoverBg: 'bg-mekongga-500' }, w.mekongga, w.voiceMekongga, w.audioEnabled, w.audioMekongga),
     ].join('');
 
     wordModalDialects.querySelectorAll('.speak-btn').forEach(btn=>{

@@ -25,6 +25,10 @@ class WordFactory extends Factory
             'word_mekongga' => $this->faker->word(),
             'audio_source' => Word::AUDIO_SOURCE_AUTO,
             'audio_voice' => Word::AUDIO_VOICE_MALE,
+            'audio_konawe_source' => Word::AUDIO_SOURCE_AUTO,
+            'audio_konawe_voice' => Word::AUDIO_VOICE_MALE,
+            'audio_mekongga_source' => Word::AUDIO_SOURCE_AUTO,
+            'audio_mekongga_voice' => Word::AUDIO_VOICE_MALE,
             'order' => $this->faker->numberBetween(0, 50),
         ];
     }

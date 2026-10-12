@@ -54,12 +54,18 @@
                             <td class="px-6 py-3.5">
                                 @if (! $word->audio_enabled)
                                     <span class="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide bg-konawe-500/10 text-konawe-600 px-2.5 py-1 rounded-full">Nonaktif</span>
-                                @elseif ($word->audio_source === 'local' && $word->hasLocalAudio())
-                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide bg-teal-50 text-teal-700 px-2.5 py-1 rounded-full">Lokal</span>
                                 @else
-                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide bg-sand-100 text-ink/50 px-2.5 py-1 rounded-full">
-                                        Otomatis &middot; {{ $word->audio_voice === 'female' ? 'Perempuan' : 'Laki-laki' }}
-                                    </span>
+                                    <div class="flex flex-col gap-1">
+                                        @foreach (['id' => 'ID', 'konawe' => 'Konawe', 'mekongga' => 'Mekongga'] as $language => $shortLabel)
+                                            @if ($word->usesLocalAudio($language))
+                                                <span class="inline-flex w-fit items-center gap-1 text-[11px] font-semibold uppercase tracking-wide bg-teal-50 text-teal-700 px-2.5 py-0.5 rounded-full">{{ $shortLabel }} &middot; Lokal</span>
+                                            @else
+                                                <span class="inline-flex w-fit items-center gap-1 text-[11px] font-semibold uppercase tracking-wide bg-sand-100 text-ink/50 px-2.5 py-0.5 rounded-full">
+                                                    {{ $shortLabel }} &middot; Otomatis &middot; {{ $word->audioVoice($language) === 'female' ? 'P' : 'L' }}
+                                                </span>
+                                            @endif
+                                        @endforeach
+                                    </div>
                                 @endif
                             </td>
                             <td class="px-6 py-3.5">
