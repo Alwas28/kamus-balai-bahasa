@@ -99,7 +99,9 @@ class WordController extends Controller
             'audio_voice' => ['required', "array:{$languages}"],
             'audio_voice.*' => ['required', 'in:male,female'],
             'audio' => ['nullable', "array:{$languages}"],
-            'audio.*' => ['nullable', 'file', 'mimes:mp3,wav,ogg,m4a,aac', 'max:5120'],
+            // Phone recordings are often content-detected as video/mp4 (m4a) or audio/aac (adts),
+            // so check the file extension plus an audio-ish MIME type instead of strict `mimes`.
+            'audio.*' => ['nullable', 'file', 'extensions:mp3,wav,ogg,oga,opus,m4a,aac,webm', 'mimetypes:audio/*,video/mp4,video/webm,video/ogg', 'max:5120'],
             'remove_audio' => ['nullable', "array:{$languages}"],
             'remove_audio.*' => ['nullable', 'boolean'],
         ]);
@@ -111,8 +113,18 @@ class WordController extends Controller
             $data[$columns['source']] = $validated['audio_source'][$language] ?? Word::AUDIO_SOURCE_AUTO;
             $data[$columns['voice']] = $validated['audio_voice'][$language] ?? Word::AUDIO_VOICE_MALE;
 
-            $willHaveFile = $request->hasFile("audio.{$language}")
-                || ($word?->audioPath($language) && ! $request->boolean("remove_audio.{$language}"));
+            $isRemovingWithoutReplacement = $request->boolean("remove_audio.{$language}")
+                && $word?->audioPath($language)
+                && ! $request->hasFile("audio.{$language}");
+
+            // Deleting a recording without uploading a new one falls back to automatic audio.
+            if ($isRemovingWithoutReplacement) {
+                $data[$columns['source']] = Word::AUDIO_SOURCE_AUTO;
+
+                continue;
+            }
+
+            $willHaveFile = $request->hasFile("audio.{$language}") || $word?->audioPath($language);
 
             if ($data['audio_enabled'] && $data[$columns['source']] === Word::AUDIO_SOURCE_LOCAL && ! $willHaveFile) {
                 $errors["audio.{$language}"] = "Unggah berkas audio {$columns['label']}, atau pilih Otomatis.";

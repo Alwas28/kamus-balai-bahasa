@@ -4,6 +4,17 @@
             @csrf
             @if ($word->exists) @method('PUT') @endif
 
+            @if ($errors->any())
+                <div class="mb-5 rounded-xl bg-konawe-500/10 ring-1 ring-konawe-500/30 p-4 text-sm text-konawe-600">
+                    <p class="font-semibold">Data belum tersimpan. Periksa kembali isian berikut:</p>
+                    <ul class="list-disc ml-5 mt-1.5 space-y-0.5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div>
                 <x-input-label for="category_id" value="Kategori" />
                 <select id="category_id" name="category_id" required class="block mt-1.5 w-full border-2 border-sand-200 focus:border-teal-500 focus:ring-teal-500 rounded-xl shadow-sm text-ink">
@@ -90,7 +101,7 @@
 
                 <div x-show="enabled === '1'" x-cloak class="mt-5 pt-5 border-t border-sand-100">
                     <x-input-label value="Sumber Audio" />
-                    <p class="text-xs text-ink/50 mt-1 mb-3">Atur sumber suara tiap bahasa. <strong>Otomatis</strong> dibacakan perangkat (text-to-speech), <strong>Lokal</strong> memakai rekaman yang diunggah (MP3/WAV/OGG/M4A, maks. 5MB).</p>
+                    <p class="text-xs text-ink/50 mt-1 mb-3">Atur sumber suara tiap bahasa. <strong>Otomatis</strong> dibacakan perangkat (text-to-speech), <strong>Lokal</strong> memakai rekaman yang diunggah (MP3/WAV/OGG/M4A/AAC/OPUS/WEBM, maks. 5MB). Mencentang <strong>Hapus</strong> tanpa mengunggah pengganti akan mengubah bahasa itu menjadi Otomatis.</p>
 
                     <div class="space-y-4">
                         @foreach (\App\Models\Word::AUDIO_LANGUAGES as $language => $audioLanguage)

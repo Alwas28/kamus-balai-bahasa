@@ -239,4 +239,71 @@ class WordUploadTest extends TestCase
         $this->assertSame('words/audio/konawe.mp3', $word->audio_konawe_path);
         Storage::disk('public')->assertExists('words/audio/konawe.mp3');
     }
+
+    public function test_phone_recordings_detected_as_video_mp4_are_accepted(): void
+    {
+        Storage::fake('public');
+
+        $user = $this->userWithWordPermissions();
+        $category = Category::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('admin.words.store'), [
+            'category_id' => $category->id,
+            'word_id' => 'batu',
+            'audio_enabled' => true,
+            ...$this->audioSettings(['id' => Word::AUDIO_SOURCE_LOCAL]),
+            'audio' => ['id' => UploadedFile::fake()->create('batu.m4a', 100, 'video/mp4')],
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        Storage::disk('public')->assertExists(Word::where('word_id', 'batu')->firstOrFail()->audio_path);
+    }
+
+    public function test_non_audio_files_are_rejected(): void
+    {
+        $user = $this->userWithWordPermissions();
+        $category = Category::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('admin.words.store'), [
+            'category_id' => $category->id,
+            'word_id' => 'kayu',
+            'audio_enabled' => true,
+            ...$this->audioSettings(['id' => Word::AUDIO_SOURCE_LOCAL]),
+            'audio' => ['id' => UploadedFile::fake()->create('kayu.pdf', 100, 'application/pdf')],
+        ]);
+
+        $response->assertSessionHasErrors('audio.id');
+        $this->assertDatabaseMissing('words', ['word_id' => 'kayu']);
+    }
+
+    public function test_removing_a_recording_without_replacement_falls_back_to_automatic(): void
+    {
+        Storage::fake('public');
+
+        $user = $this->userWithWordPermissions();
+        $category = Category::factory()->create();
+
+        $word = Word::factory()->create([
+            'category_id' => $category->id,
+            'audio_enabled' => true,
+            'audio_mekongga_source' => Word::AUDIO_SOURCE_LOCAL,
+            'audio_mekongga_path' => 'words/audio/mekongga.mp3',
+        ]);
+        Storage::disk('public')->put($word->audio_mekongga_path, 'mekongga');
+
+        $response = $this->actingAs($user)->put(route('admin.words.update', $word), [
+            'category_id' => $category->id,
+            'word_id' => $word->word_id,
+            'audio_enabled' => true,
+            ...$this->audioSettings(['mekongga' => Word::AUDIO_SOURCE_LOCAL]),
+            'remove_audio' => ['mekongga' => '1'],
+        ]);
+
+        $response->assertRedirect(route('admin.words.index'));
+
+        $word->refresh();
+        $this->assertSame(Word::AUDIO_SOURCE_AUTO, $word->audio_mekongga_source);
+        $this->assertNull($word->audio_mekongga_path);
+        Storage::disk('public')->assertMissing('words/audio/mekongga.mp3');
+    }
 }
