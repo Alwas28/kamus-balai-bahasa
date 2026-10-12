@@ -115,9 +115,10 @@
                     </div>
                     <x-input-error :messages="$errors->get('audio_source')" class="mt-2" />
 
-                    {{-- Otomatis: pilihan jenis suara --}}
-                    <div x-show="source === 'auto'" x-cloak class="mt-4">
-                        <x-input-label value="Jenis Suara" />
+                    {{-- Jenis suara text-to-speech: dipakai pada mode otomatis, dan pada mode lokal untuk bahasa tanpa rekaman --}}
+                    <div class="mt-4">
+                        <x-input-label value="Jenis Suara Otomatis" />
+                        <p class="text-xs text-ink/50 mt-1" x-show="source === 'local'" x-cloak>Dipakai untuk bahasa yang tidak diunggah rekamannya.</p>
                         <div class="flex flex-wrap gap-3 mt-1.5">
                             <label class="inline-flex items-center gap-2 text-sm text-ink bg-sand-50 ring-1 ring-sand-200 rounded-full px-4 py-2 cursor-pointer">
                                 <input type="radio" name="audio_voice" value="male"
@@ -137,7 +138,7 @@
 
                     {{-- Lokal: unggah berkas --}}
                     <div x-show="source === 'local'" x-cloak class="mt-4 space-y-4">
-                        <p class="text-xs text-ink/50">Unggah rekaman untuk tiap bahasa. Bahasa tanpa rekaman akan dibacakan otomatis. Format MP3/WAV/OGG/M4A, maks. 5MB.</p>
+                        <p class="text-xs text-ink/50">Unggah rekaman hanya untuk bahasa yang diinginkan. Misalnya, kosongkan Bahasa Indonesia agar tetap dibacakan otomatis, lalu unggah rekaman Konawe dan Mekongga. Format MP3/WAV/OGG/M4A, maks. 5MB.</p>
 
                         @foreach (\App\Models\Word::AUDIO_LANGUAGE_LABELS as $language => $label)
                             <div class="rounded-xl ring-1 ring-sand-200 p-3.5">
